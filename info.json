@@ -1,0 +1,9 @@
+{
+	"Id": "dv_h_shifter",
+	"Version": "0.0.2",
+	"DisplayName": "H-pattern shifter mod",
+	"Author": "Tostiman",
+	"EntryMethod": "dv_h_shifter.Main.Load",
+	"AssemblyName": "dv_h_shifter.dll",
+	"HomePage": "https://www.tostiman.com"
+}

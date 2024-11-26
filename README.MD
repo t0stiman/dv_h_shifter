@@ -1,9 +1,8 @@
 ﻿# H-pattern shifter mod for Derail Valley
 
-With this mod, you can shift gears in the DM3 with an H-pattern gear shifter.
+With this mod, you can shift gears in the DM3 and the DM1U with an H-pattern gear shifter.
 
-Note: this mod has only been tested with a Thrustmaster TH8A. If you use a different shifter and it doesn't
-work, please @ me on the AltFuture Discord, DM me, or create an issue here on GitHub. 
+Note: this mod has only been tested with a Thrustmaster TH8A. If you use a different shifter and it doesn't work, please @ me on the AltFuture Discord, DM me, or create an issue here on GitHub. 
 
 ## Installation instructions
 

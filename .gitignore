@@ -5,3 +5,4 @@ packages
 Directory.Build.targets
 dv_h_shifter.lnk
 Folder.DotSettings.user
+build

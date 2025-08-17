@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using WindowsInput;
 
 namespace dv_h_shifter;
 
@@ -8,7 +7,6 @@ public abstract class ShiftStrategy
 {
 	protected DateTime previousLeverMoveTime = new(0);
 	protected abstract int numberOfGears { get; }
-	protected static InputSimulator inputSim = new();
 
 	public void Update()
 	{
@@ -23,7 +21,7 @@ public abstract class ShiftStrategy
 			bool keyDown;
 			try
 			{
-				keyDown = Input.GetKeyDown("joystick " + Main.UnityDeviceNumber + " button " + gearNumber);
+				keyDown = Input.GetKeyDown("joystick " + Main.MySettings.UnityDeviceNumber + " button " + gearNumber);
 			}
 			//ignore buttons that don't exist
 			catch (ArgumentException)
@@ -33,7 +31,7 @@ public abstract class ShiftStrategy
 
 			if (keyDown)
 			{
-				Main.Log("joystick " + Main.UnityDeviceNumber + " button " + gearNumber);
+				Main.LogDebug("joystick " + Main.MySettings.UnityDeviceNumber + " button " + gearNumber);
 				CalculateGearDelta(gearNumber);
 			}
 		}

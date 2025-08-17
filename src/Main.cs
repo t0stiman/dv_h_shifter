@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using DV.Interaction.Inputs;
 using UnityEngine;
 using UnityModManagerNet;
 using HarmonyLib;
@@ -10,15 +11,12 @@ namespace dv_h_shifter
 	static class Main
 	{
 		private static UnityModManager.ModEntry myModEntry;
-		private static Harmony harmony;
+		private static Harmony myHarmony;
+		public static Settings MySettings;
 
 		public static ShiftStrategy CurrentStrategy;
-	
-		//joy number
-		private static int deviceNumber = 0;
-		//unity starts counting at 1 instead of 0
-		public static int UnityDeviceNumber => deviceNumber + 1;
-		private static string[] joystickNames;
+		
+		public static string[] JoystickNames;
 
 		//===========================================
 
@@ -26,26 +24,30 @@ namespace dv_h_shifter
 		{
 			try
 			{
-				joystickNames = Input.GetJoystickNames();
-				for (int i = 0; i < joystickNames.Length; i++)
+				MySettings = Settings.Load<Settings>(modEntry);
+				modEntry.OnGUI = entry => MySettings.Draw(entry);
+				modEntry.OnSaveGUI = entry => MySettings.Save(entry);
+				
+				JoystickNames = Input.GetJoystickNames();
+				for (int i = 0; i < JoystickNames.Length; i++)
 				{
-					modEntry.Logger.Log(i+": "+joystickNames[i]);
+					modEntry.Logger.Log(i+": "+JoystickNames[i]);
 				}
 			
 				myModEntry = modEntry;
-				myModEntry.OnUpdate = OnUpdate;
-				myModEntry.OnGUI = OnGUI;
-				myModEntry.OnUnload = OnUnload;
-				
-				harmony = new Harmony(myModEntry.Info.Id);
-				harmony.PatchAll(Assembly.GetExecutingAssembly());
+				modEntry.OnUpdate = OnUpdate;
 
-				CurrentStrategy = new DM3();
+				modEntry.OnUnload = OnUnload;
+				
+				myHarmony = new Harmony(modEntry.Info.Id);
+				myHarmony.PatchAll(Assembly.GetExecutingAssembly());
+
+				CurrentStrategy = new Nothing();
 			}
 			catch (Exception ex)
 			{
-				myModEntry.Logger.LogException($"Failed to load {myModEntry.Info.DisplayName}:", ex);
-				harmony?.UnpatchAll(myModEntry.Info.Id);
+				modEntry.Logger.LogException($"Failed to load {modEntry.Info.DisplayName}:", ex);
+				myHarmony?.UnpatchAll(modEntry.Info.Id);
 				return false;
 			}
 
@@ -55,20 +57,8 @@ namespace dv_h_shifter
 
 		private static bool OnUnload(UnityModManager.ModEntry modEntry)
 		{
-			harmony?.UnpatchAll(myModEntry.Info.Id);
+			myHarmony?.UnpatchAll(modEntry.Info.Id);
 			return true;
-		}
-
-		private static void OnGUI(UnityModManager.ModEntry modEntry)
-		{
-			GUILayout.Label("Gear shift device");
-			var previousDeviceNumber = deviceNumber;
-			deviceNumber = GUILayout.Toolbar(deviceNumber, joystickNames);
-
-			if (deviceNumber != previousDeviceNumber)
-			{
-				modEntry.Logger.Log("selecting ["+deviceNumber+"] "+joystickNames[deviceNumber]);
-			}
 		}
 
 		private static void OnUpdate(UnityModManager.ModEntry modEntry, float idk)
@@ -77,6 +67,12 @@ namespace dv_h_shifter
 		}
 
 		// Logger functions
+		public static void LogDebug(string message)
+		{
+			if(!MySettings.DebugLogging) return;
+			Debug.Log($"[DEBUG] {message}");
+		}
+		
 		public static void Log(string message)
 		{
 			myModEntry.Logger.Log(message);

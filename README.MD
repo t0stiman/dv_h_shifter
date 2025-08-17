@@ -7,10 +7,6 @@ Note: this mod has only been tested with a Thrustmaster TH8A. If you use a diffe
 ## Installation instructions
 
 1. [Download the mod](https://www.nexusmods.com/derailvalley/mods/835), yeet it into Unity Mod Manager
-2. Ensure your keybinds are set like in the following screenshot. The easiest way to edit your keybinds is with the [Keybinds Settings
-Menu mod](https://www.nexusmods.com/derailvalley/mods/817).
-
-![keybinds.png](keybinds.png)
 3. Start the game
 4. Press ctrl + F10 to open the mod manager menu
 5. Open the settings of this mod and ensure the correct input device is selected, then press 'save'

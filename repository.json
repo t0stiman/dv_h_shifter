@@ -1,0 +1,9 @@
+﻿{
+  "Releases": [
+    {
+      "Id": "dv_h_shifter",
+      "Version": "0.2.0",
+      "DownloadUrl": "https://github.com/t0stiman/dv_h_shifter/releases/download/v0.2.0/dv_h_shifter.zip"
+    }
+  ]
+}

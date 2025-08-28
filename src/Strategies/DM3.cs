@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DV.CabControls;
-using DV.KeyboardInput;
 using UnityEngine;
 
 namespace dv_h_shifter;
@@ -37,32 +35,7 @@ public class DM3: ShiftStrategy
 
 	protected override int numberOfGears => 8; 
 	
-	private LeverBase gearLeverA;
-	private LeverBase gearLeverB;
-
-	public DM3(TrainCar car)
-	{
-		var inputs = car.interior
-			.GetComponentsInChildren<MouseScrollKeyboardInput>();
-		var gearInputA = inputs
-			.FirstOrDefault(anInput => anInput.scrollAction.name == "GearAIncrement");
-		var gearInputB = inputs
-			.FirstOrDefault(anInput => anInput.scrollAction.name == "GearBIncrement");
-	
-		if (!gearInputA)
-		{
-			Main.Error($"DM1U {nameof(gearInputA)} not found");
-			return;
-		}
-		if (!gearInputB)
-		{
-			Main.Error($"DM1U {nameof(gearInputB)} not found");
-			return;
-		}
-	
-		gearLeverA = gearInputA.gameObject.GetComponent<LeverBase>();
-		gearLeverB = gearInputB.gameObject.GetComponent<LeverBase>();
-	}
+	public DM3(TrainCar car) : base(car) {}
 
 	protected override void MoveGearLevers()
 	{
@@ -79,26 +52,26 @@ public class DM3: ShiftStrategy
 		
 		if (gearDelta.posA > 0)
 		{
-			Main.LogDebug("shifting A up");
+			Main.Debug("shifting A up");
 			gearLeverA.Scroll(ScrollAction.ScrollUp);
 			gearDelta.posA--;
 		}
 		else if (gearDelta.posA < 0)
 		{
-			Main.LogDebug("shifting A down");
+			Main.Debug("shifting A down");
 			gearLeverA.Scroll(ScrollAction.ScrollDown);
 			gearDelta.posA++;
 		}
 		
 		if (gearDelta.posB > 0)
 		{
-			Main.LogDebug("shifting B up");
+			Main.Debug("shifting B up");
 			gearLeverB.Scroll(ScrollAction.ScrollUp);
 			gearDelta.posB--;
 		}
 		else if (gearDelta.posB < 0)
 		{
-			Main.LogDebug("shifting B down");
+			Main.Debug("shifting B down");
 			gearLeverB.Scroll(ScrollAction.ScrollDown);
 			gearDelta.posB++;
 		}
@@ -110,7 +83,7 @@ public class DM3: ShiftStrategy
 	{
 		//no neutral in the DM3 so we start at 1
 		wantedGear++;
-		Main.LogDebug("engage gear "+wantedGear);
+		Main.Debug("engage gear "+wantedGear);
 
 		var currentState = new DM3GearLeversState(GetGearLeverPosition(gearLeverA), GetGearLeverPosition(gearLeverB));
 		var wantedState = gearLeversPositions[wantedGear - 1];

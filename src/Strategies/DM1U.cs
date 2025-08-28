@@ -1,33 +1,16 @@
 ﻿using System;
-using System.Linq;
-using DV.CabControls;
-using DV.KeyboardInput;
 using UnityEngine;
 
 namespace dv_h_shifter;
 
 public class DM1U: ShiftStrategy
 {
-	private LeverBase gearLever;
-	private int gearDelta;
+	protected int gearDelta;
 
 	//7 gears including neutral
 	protected override int numberOfGears => 7;
 	
-	public DM1U(TrainCar car)
-	{
-		var gearInput = car.interior
-			.GetComponentsInChildren<MouseScrollKeyboardInput>()
-			.FirstOrDefault(anInput => anInput.scrollAction.name == "GearAIncrement");
-		
-		if (!gearInput)
-		{
-			Main.Error($"DM1U {nameof(gearInput)} not found");
-			return;
-		}
-		
-		gearLever = gearInput.gameObject.GetComponent<LeverBase>();
-	}
+	public DM1U(TrainCar car) : base(car) {}
 
 	protected override void MoveGearLevers()
 	{
@@ -44,14 +27,14 @@ public class DM1U: ShiftStrategy
 			
 		if (gearDelta > 0)
 		{
-			Main.LogDebug($"shifting up");
-			gearLever.Scroll(ScrollAction.ScrollUp);
+			Main.Debug($"shifting up");
+			gearLeverA.Scroll(ScrollAction.ScrollUp);
 			gearDelta--;
 		}
 		else if (gearDelta < 0)
 		{
-			Main.LogDebug($"shifting down");
-			gearLever.Scroll(ScrollAction.ScrollDown);
+			Main.Debug($"shifting down");
+			gearLeverA.Scroll(ScrollAction.ScrollDown);
 			gearDelta++;
 		}
 		
@@ -60,7 +43,7 @@ public class DM1U: ShiftStrategy
 
 	protected override void CalculateGearDelta(int wantedGear)
 	{
-		Main.LogDebug("engage gear "+wantedGear);
+		Main.Debug("engage gear "+wantedGear);
 
 		var currentGear = GetSelectedGear();
 		gearDelta = wantedGear - currentGear;
@@ -68,7 +51,7 @@ public class DM1U: ShiftStrategy
 	
 	private int GetSelectedGear()
 	{
-		// 0 - 1 -> 0 - 6
-		return Mathf.RoundToInt(gearLever.Value * (numberOfGears-1));
+		// 0 - 1 -> 0 - numberOfGears-1
+		return Mathf.RoundToInt(gearLeverA.Value * (numberOfGears-1));
 	}
 }

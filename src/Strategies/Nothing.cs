@@ -2,7 +2,7 @@
 
 public class Nothing: ShiftStrategy
 {
-	protected override int numberOfGears => 1;
+	protected override int numberOfGears => 0;
 	protected override void MoveGearLevers()
 	{
 		//nothing

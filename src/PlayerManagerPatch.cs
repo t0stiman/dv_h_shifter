@@ -15,20 +15,46 @@ public class PlayerManager_SetCar_Patch
 	private static void Postfix(TrainCar newCar)
 	{
 		if (!newCar || newCar.carType == currentCarType) return;
-		
+
+		if (TryVanilla(newCar, out var newShiftStrategy) ||
+		    TryCCL(newCar, out newShiftStrategy))
+		{
+			Main.CurrentStrategy = newShiftStrategy;
+		}
+		else
+		{
+			Main.CurrentStrategy = new Nothing();
+		}
+
+		Main.Debug($"Entering {Main.CurrentStrategy.GetType()}");
+	}
+
+	private static bool TryVanilla(TrainCar newCar, out ShiftStrategy newShiftStrategy)
+	{
 		switch (newCar.carType)
 		{
 			case TrainCarType.LocoDM3:
-				Main.CurrentStrategy = new DM3(newCar);
-				break;
+				newShiftStrategy = new DM3(newCar);
+				return true;
 			case TrainCarType.LocoDM1U:
-				Main.CurrentStrategy = new DM1U(newCar);
-				break;
+				newShiftStrategy = new DM1U(newCar);
+				return true;
 			default:
-				Main.CurrentStrategy = new Nothing();
-				break;
+				newShiftStrategy = null;
+				return false;
 		}
-		
-		Main.LogDebug($"Entering {Main.CurrentStrategy.GetType()}");
+	}
+	
+	private static bool TryCCL(TrainCar newCar, out ShiftStrategy newShiftStrategy)
+	{
+		switch (newCar.carLivery.parentType.id)
+		{
+			case "YF_GT26CW-2":
+				newShiftStrategy = new GT26(newCar);
+				return true;
+			default:
+				newShiftStrategy = null;
+				return false;
+		}
 	}
 }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using DV.CabControls;
+using DV.KeyboardInput;
 using UnityEngine;
 
 namespace dv_h_shifter;
@@ -7,6 +10,39 @@ public abstract class ShiftStrategy
 {
 	protected DateTime previousLeverMoveTime = new(0);
 	protected abstract int numberOfGears { get; }
+	
+	protected LeverBase gearLeverA;
+	protected LeverBase gearLeverB;
+
+	protected ShiftStrategy(){}
+	
+	protected ShiftStrategy(TrainCar car)
+	{
+		var gearInputs = car.interior
+			.GetComponentsInChildren<MouseScrollKeyboardInput>();
+			
+		var gearInputA = gearInputs 
+			.FirstOrDefault(anInput => anInput.scrollAction.name == "GearAIncrement");
+		
+		if (!gearInputA)
+		{
+			Main.Error($"{nameof(gearInputA)} not found on {car.name}");
+			return;
+		}
+		
+		gearLeverA = gearInputA.gameObject.GetComponent<LeverBase>();
+		
+		var gearInputB = gearInputs
+			.FirstOrDefault(anInput => anInput.scrollAction.name == "GearBIncrement");
+		
+		if (!gearInputB)
+		{
+			Main.Debug($"{nameof(gearInputB)} not found on {car.name}");
+			return;
+		}
+		
+		gearLeverB = gearInputB.gameObject.GetComponent<LeverBase>();
+	}
 
 	public void Update()
 	{
@@ -14,14 +50,15 @@ public abstract class ShiftStrategy
 		MoveGearLevers();
 	}
 
-	private void HandleInput()
+	protected virtual void HandleInput()
 	{
-		for (int gearNumber = 0; gearNumber < numberOfGears; gearNumber++)
+		for (int gearIndex = 0; gearIndex < numberOfGears; gearIndex++)
 		{
+			string joyString = GetJoyString(gearIndex);
 			bool keyDown;
 			try
 			{
-				keyDown = Input.GetKeyDown("joystick " + Main.MySettings.UnityDeviceNumber + " button " + gearNumber);
+				keyDown = Input.GetKeyDown(joyString);
 			}
 			//ignore buttons that don't exist
 			catch (ArgumentException)
@@ -29,12 +66,16 @@ public abstract class ShiftStrategy
 				continue;
 			}
 
-			if (keyDown)
-			{
-				Main.LogDebug("joystick " + Main.MySettings.UnityDeviceNumber + " button " + gearNumber);
-				CalculateGearDelta(gearNumber);
-			}
+			if (!keyDown) continue;
+			
+			Main.Debug(joyString);
+			CalculateGearDelta(gearIndex);
 		}
+	}
+
+	public static string GetJoyString(int buttonIndex)
+	{
+		return $"joystick {Main.MySettings.UnityDeviceNumber} button {buttonIndex}";
 	}
 
 	/// <summary>
@@ -45,6 +86,6 @@ public abstract class ShiftStrategy
 	/// <summary>
 	/// determines if and how far the gear levers should be moved
 	/// </summary>
-	/// <param name="wantedGear">the gear the player requested</param>
-	protected abstract void CalculateGearDelta(int wantedGear);
+	/// <param name="selectedJoystickGear">the gear the player engaged in the h-pattern shifter (starts at 0)</param>
+	protected abstract void CalculateGearDelta(int selectedJoystickGear);
 }

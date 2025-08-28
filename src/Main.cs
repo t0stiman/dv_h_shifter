@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using DV.Interaction.Inputs;
 using UnityEngine;
 using UnityModManagerNet;
 using HarmonyLib;
@@ -67,10 +66,10 @@ namespace dv_h_shifter
 		}
 
 		// Logger functions
-		public static void LogDebug(string message)
+		public static void Debug(string message)
 		{
 			if(!MySettings.DebugLogging) return;
-			Debug.Log($"[DEBUG] {message}");
+			myModEntry.Logger.Log($"[DEBUG] {message}");
 		}
 		
 		public static void Log(string message)

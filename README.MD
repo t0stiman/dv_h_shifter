@@ -1,6 +1,7 @@
 ﻿# H-pattern shifter mod for Derail Valley
 
-With this mod, you can shift gears in the DM3 and the DM1U with an H-pattern gear shifter.
+With this mod, you can shift gears in the DM3 and the DM1U with an H-pattern gear shifter.  
+It also supports the [GT26CW-2](https://www.nexusmods.com/derailvalley/mods/1256). In that locomotive the shifter controls the power/dynamic brake selector.
 
 Note: this mod has only been tested with a Thrustmaster TH8A. If you use a different shifter and it doesn't work, please @ me on the AltFuture Discord, DM me, or create an issue here on GitHub. 
 

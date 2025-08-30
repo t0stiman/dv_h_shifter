@@ -1,6 +1,6 @@
 {
 	"Id": "dv_h_shifter",
-	"Version": "0.2.0",
+	"Version": "0.3.0",
 	"DisplayName": "H-pattern shifter mod",
 	"Author": "Tostiman",
 	"EntryMethod": "dv_h_shifter.Main.Load",

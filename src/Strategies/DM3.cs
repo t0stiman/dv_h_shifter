@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DV.CabControls;
 using UnityEngine;
 
@@ -18,17 +17,16 @@ public class DM3: ShiftStrategy
 	2-3
 	3-3
 	 */
-	private static readonly List<DM3GearLeversState> gearLeversPositions = new
-	(new[] {
-		new DM3GearLeversState (1, 1),
-		new DM3GearLeversState (1, 2),
-		new DM3GearLeversState (2, 1),
-		new DM3GearLeversState (2, 2),
-		new DM3GearLeversState (3, 1),
-		new DM3GearLeversState (3, 2),
-		new DM3GearLeversState (2, 3),
-		new DM3GearLeversState (3, 3)
-	});
+	private static readonly DM3GearLeversState[] gearLeversPositions = {
+		new(1, 1),
+		new(1, 2),
+		new(2, 1),
+		new(2, 2),
+		new(3, 1),
+		new(3, 2),
+		new(2, 3),
+		new(3, 3)
+	};
 	
 	// difference between the current GearLeversState and the state we want to achieve
 	private DM3GearLeversState gearDelta = new();
